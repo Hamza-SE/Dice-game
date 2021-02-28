@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Lato:100,300,600" rel="stylesheet" type="text/css">
+        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+        <link type="text/css" rel="stylesheet" href="style.css">
+        
+        <title>Pig Game</title>
+    </head>
+
+    <body>
+        <div class="wrapper clearfix">
+            <div class="player-0-panel active" id="ap1">
+                <div class="player-name" id="name-0">Player 1</div>
+                <div class="player-score" id="score-0">0</div>
+                <div class="player-current-box">
+                    <div class="player-current-label">Current</div>
+                    <div class="player-current-score" id="current-0">0</div>
+                </div>
+            </div>
+            
+            <div class="player-1-panel" id="ap2">
+                <div class="player-name" id="name-1">Player 2</div>
+                <div class="player-score" id="score-1">0</div>
+                <div class="player-current-box">
+                    <div class="player-current-label">Current</div>
+                    <div class="player-current-score" id="current-1">0</div>
+                </div>
+            </div>
+            
+            <button class="btn-new" id="new"><i class="ion-ios-plus-outline"></i>New game
+            </button>
+            <button class="btn-roll" id="roll"><i class="ion-ios-loop"></i>Roll dice</button>
+            <button class="btn-hold" id="hold"><i class="ion-ios-download-outline"></i>Hold
+            </button>
+            
+            <input type="text" placeholder="Final score" class="final-score" id="final" >
+            
+            <img src="dice-5.png" alt="Dice" class="dice" id="dice-1">
+            <img src="dice-5.png" alt="Dice" class="dice" id="dice-2">
+        </div>
+        
+        <!--<script src="app.js"></script>-->
+        <!-- <script src="challenges.js"> -->
+        <script>
+            //3 buttons
+            var newbtn=document.getElementById("new");
+            var rollbtn=document.getElementById("roll");
+            var holdbtn=document.getElementById("hold");
+
+            //ids for div to toggle active class during game
+            var active1=document.getElementById("ap1");
+            var active2=document.getElementById("ap2");
+            
+            //temp score change on roll button 
+            var currentScore1=document.getElementById("current-0");
+            var currentScore2=document.getElementById("current-1");
+            
+            //permanent score change on hold button 
+            var scoreP1=document.getElementById("score-0");
+            var scoreP2=document.getElementById("score-1");
+
+            //for dice images
+            var img1=document.getElementById("dice-1");
+            var img2=document.getElementById("dice-2");
+
+            var winner=document.getElementById("final");
+            //for calculating total score on dice roll for each player
+            var temp=0;
+            //for calculating permanent score of both players
+            var calP1=0;
+            var calP2=0;
+            //for random number
+            var x1 = 0;
+            var x2 = 0;
+
+            //when new game button is pressed all score will be 0
+            newbtn.addEventListener("click",startFunction,false);
+            function startFunction(a) {
+                active1.classList.add("active");
+                active2.classList.remove("active");
+                temp=0;
+                calP1=0;
+                calP2=0;
+                currentScore1.innerHTML=0;
+                currentScore2.innerHTML=0;
+                scoreP1.innerHTML=0;
+                scoreP2.innerHTML=0;
+            }
+
+            //roll button functionality on clicking :
+            // 1. 2 img changes through random number generated in x1 & x2
+            // 2. if none of x1 or x2 is 0 then images changes and both number added 
+            rollbtn.addEventListener("click", rollDicefunction,false);
+            function rollDicefunction(a) {
+                x1 = Math.floor((Math.random() * 6) + 0);
+                x2 = Math.floor((Math.random() * 6) + 0);
+                if (x1!=0 && x2!=0) {
+                    img1.src="dice-"+x1+".png";
+                    img2.src="dice-"+x2+".png";
+                    temp=temp+x1+x2;
+                    
+                    if (active1.classList.contains("active")) {
+                        currentScore1.innerHTML=temp;
+                    }else{
+                        currentScore2.innerHTML=temp;
+                    }
+
+                }else{
+                    temp=0;
+                    if (active1.classList.contains("active")) {
+                        active1.classList.remove("active");
+                        active2.classList.add("active");
+                        currentScore1.innerHTML=0;
+                    }else{
+                        active2.classList.remove("active");
+                        active1.classList.add("active");
+                        currentScore2.innerHTML=0;
+                    }
+                }
+                
+            }
+
+            holdbtn.addEventListener("click", holdScorefunction,false);
+            function holdScorefunction(a) {
+                
+                if (active1.classList.contains("active")) {
+                    active1.classList.remove("active");
+                    active2.classList.add("active");
+                    calP1=calP1+temp;
+                    scoreP1.innerHTML=calP1;
+                    temp=0;
+                    currentScore1.innerHTML=0;
+                }else{
+                    active2.classList.remove("active");
+                    active1.classList.add("active");
+                    calP2=calP2+temp;
+                    scoreP2.innerHTML=calP2;
+                    temp=0;
+                    currentScore2.innerHTML=0;
+                }
+
+                if (calP1>=100) {
+                    active1.classList.add("winner");
+                    winner.value="[ "+calP1+" ]";
+                }else if (calP2>=100) {
+                    active2.classList.add("winner");
+                    winner.value="[ "+calP2+" ]";
+                }
+            }
+            
+        </script>
+    </body>
+</html>
